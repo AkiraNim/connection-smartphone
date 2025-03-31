@@ -20,6 +20,7 @@ const db = getDatabase(app);
 const vibrarRef = ref(db, "vibrador/vibrar");
 const lanternaRef = ref(db, "lanterna/status");
 const bateriaRef = ref(db, "bateria/status");
+const zoioRef = ref(db, "audio-zoio/status");
 
 onValue(vibrarRef, (snapshot) => {
     const vibrar = snapshot.val();
@@ -77,3 +78,20 @@ function atualizarStatusBateria() {
 setInterval(atualizarStatusBateria, 30000);
 
 atualizarStatusBateria();
+
+onValue(zoioRef, (snapshot) => {
+    const tiraTira = snapshot.val();
+    if (tiraTira) {
+        console.log("Tira, tira!!!😲");
+        exec("termux-media-player play midias/audio_zoio.mp3", (error) => {
+            if (error) {
+                console.error("Vou tirar não😏", error);
+            } else {
+                console.log("Tirado com sucesso😵!");
+                set(zoioRef, false);
+            }
+        });
+    } else {
+        exec("termux-media-player pause");
+    }
+});
