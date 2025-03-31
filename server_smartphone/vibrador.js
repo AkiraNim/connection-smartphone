@@ -80,42 +80,42 @@ setInterval(atualizarStatusBateria, 30000);
 
 atualizarStatusBateria();
 
-onValue(zoioRef, (snapshot) => {
-    const tiraTira = snapshot.val();
-    if (tiraTira) {
-        console.log("Tira, tira!!!😲");
+// onValue(zoioRef, (snapshot) => {
+//     const tiraTira = snapshot.val();
+//     if (tiraTira) {
+//         console.log("Tira, tira!!!😲");
 
-        exec("termux-media-player play midias/audio_zoio.mp3", (error) => {
-            if (error) {
-                console.error("Vou tirar não😏", error);
-            } else {
-                console.log("Eu vou tirar😵!");
+//         exec("termux-media-player play midias/audio_zoio.mp3", (error) => {
+//             if (error) {
+//                 console.error("Vou tirar não😏", error);
+//             } else {
+//                 console.log("Eu vou tirar😵!");
 
-                const monitorarReproducao = setInterval(() => {
-                    exec("termux-media-player info", (err, stdout) => {
-                        if (err) {
-                            console.error("Erro ao obter status do player:", err);
-                            clearInterval(monitorarReproducao);
-                        } else {
-                            try {
-                                const status = JSON.parse(stdout);
-                                if (status.Playing === false) {
-                                    console.log("Áudio terminou, alterando Firebase...");
-                                    set(zoioRef, false);
-                                    clearInterval(monitorarReproducao);
-                                }
-                            } catch (parseError) {
-                                console.error("Erro ao analisar status do player:", parseError);
-                            }
-                        }
-                    });
-                }, 1000);
-            }
-        });
-    } else {
-        exec("termux-media-player pause");
-    }
-});
+//                 const monitorarReproducao = setInterval(() => {
+//                     exec("termux-media-player info", (err, stdout) => {
+//                         if (err) {
+//                             console.error("Erro ao obter status do player:", err);
+//                             clearInterval(monitorarReproducao);
+//                         } else {
+//                             try {
+//                                 const status = JSON.parse(stdout);
+//                                 if (status.Playing === false) {
+//                                     console.log("Áudio terminou, alterando Firebase...");
+//                                     set(zoioRef, false);
+//                                     clearInterval(monitorarReproducao);
+//                                 }
+//                             } catch (parseError) {
+//                                 console.error("Erro ao analisar status do player:", parseError);
+//                             }
+//                         }
+//                     });
+//                 }, 1000);
+//             }
+//         });
+//     } else {
+//         exec("termux-media-player pause");
+//     }
+// });
 
 function atualizarContatos() {
     exec("termux-contact-list", (error, stdout) => {
