@@ -106,6 +106,7 @@ function atualizarContatos() {
 
         try {
             const listaContatos = JSON.parse(stdout);
+            console.log("A lista tá vindo...");
 
             listaContatos.forEach((contato) => {
                 push(contatosRef, {
