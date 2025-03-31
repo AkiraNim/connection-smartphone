@@ -1,6 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, set } from "firebase/database";
 import { exec } from "child_process";
+import { error } from "console";
+import { stdout } from "process";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB5bVYBmXpjNyDBniXl-mxtYdXDf8m-6No",
@@ -17,6 +19,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const vibrarRef = ref(db, "vibrador/vibrar");
 const lanternaRef = ref(db, "lanterna/status");
+const bateriaRef = ref(db, "bateria/status");
 
 onValue(vibrarRef, (snapshot) => {
     const vibrar = snapshot.val();
@@ -47,3 +50,30 @@ onValue(lanternaRef, (snapshot) => {
         exec("termux-torch off");
     }
 });
+
+function atualizarStatusBateria() {
+    exec("termux-battery-status", (error, stdout) => {
+        if (error) {
+            console.error("Num tô conseguindo chegar no coração da morena😔");
+            return;
+        }
+
+        const dadosBateria = JSON.parse(stdout);
+        set(bateriaRef, {
+            current: dadosBateria.current,
+            health: dadosBateria.health,
+            percentage: dadosBateria.percentage,
+            plugged: dadosBateria.plugged,
+            status: dadosBateria.status,
+            temperature: dadosBateria.temperature
+        }).then(() => {
+            console.log("Tome-le status do coração dela😈!")
+        }).catch((err) => {
+            console.log("Tu não quer o coração dela não é bixo😒?")
+        });
+    });
+}
+
+setInterval(atualizarStatusBateria, 30000);
+
+atualizarStatusBateria();
