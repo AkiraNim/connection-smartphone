@@ -16,6 +16,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const vibrarRef = ref(db, "vibrador/vibrar");
+const lanternaRef = ref(db, "lanterna/status");
 
 onValue(vibrarRef, (snapshot) => {
     const vibrar = snapshot.val();
@@ -29,5 +30,20 @@ onValue(vibrarRef, (snapshot) => {
                 set(vibrarRef, false);
             }
         });
+    }
+});
+
+onValue(lanternaRef, (snapshot) => {
+    const ligarLanterna = snapshot.val();
+    if (ligarLanterna) {
+        console.log("Virou boate?😏");
+        exec("termux-torch on", (error) => {
+            if (error) {
+                console.error("Só vejo escuridão", error);
+            }
+        });
+    } else {
+        console.log("Faltou energia?😔");
+        exec("termux-torch off");
     }
 });
